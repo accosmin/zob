@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 project(nanocv)
 
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake )
+
 ######################################################################
 # external dependencies
 ######################################################################
@@ -38,6 +40,9 @@ find_package(OpenMP QUIET)
 if(OPENMP_FOUND)
 	set(NANOCV_OPENMP_FLAG "-fopenmp")
 endif()
+
+find_package( Eigen3 )
+include_directories ( ${EIGEN3_INCLUDE_DIR} )
 
 # Eigen
 add_definitions(-DEIGEN_DONT_PARALLELIZE)
