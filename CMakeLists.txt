@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 project(nanocv)
 
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake )
+
 ######################################################################
 # external dependencies
 ######################################################################
@@ -17,7 +19,6 @@ include_directories(SYSTEM ${ZLIB_INCLUDE_DIR})
 include_directories(SYSTEM ${BZIP2_INCLUDE_DIR})
 
 # Boost
-include(FindBoost)
 set(Boost_USE_STATIC_LIBS        OFF)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME     OFF)
@@ -38,6 +39,9 @@ find_package(OpenMP QUIET)
 if(OPENMP_FOUND)
 	set(NANOCV_OPENMP_FLAG "-fopenmp")
 endif()
+
+find_package( Eigen3 )
+include_directories ( ${EIGEN3_INCLUDE_DIR} )
 
 # Eigen
 add_definitions(-DEIGEN_DONT_PARALLELIZE)
@@ -136,9 +140,6 @@ if(CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
         add_definitions(-DNANOCV_DEBUG)
 endif()
 
-# do not use Eigen's MT
-add_definitions(-DEIGEN_DONT_PARALLELIZE)
-
 message("------------------------------------------------------------------------------" "")
 message("CXX FLAGS:                    " "${CMAKE_CXX_FLAGS}")
 message("CXX DEBUG FLAGS:              " "${CMAKE_CXX_FLAGS_DEBUG}")
@@ -157,7 +158,7 @@ message("-----------------------------------------------------------------------
 # build the library, programs & tests
 ######################################################################
 
-include_directories(./)
+include_directories( ${nanocv_SOURCE_DIR} )
 
 add_subdirectory(nanocv)
 add_subdirectory(apps)
